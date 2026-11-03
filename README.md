@@ -1,7 +1,7 @@
 This repository contains the analysis scripts and computational tools developed for the research project that is part of my doctoral thesis work: Attentional Focus Dependent Neural Responses to Food: 
 Distinct Patterns of Activation, Deactivation, and Inter-individual Variability.
 The project investigates how attentional focus influences neural responses to food stimuli, using functional magnetic resonance imaging (fMRI). Its stimuli and original data were developed, collected and analysed
-by Leonardo Pimpini and Sarah Kochs.
+by Leonardo Pimpini and Sarah Kochs. The original scanning protocol and analysis scripts are also available on OSF: //osf.io/5rjxs/?view_only=7a885cb4a6084 97a9717aa1f31c7307d 
 
 The repository provides the scripts used for neuroimaging analysis, data organisation, and visualisation.
 The repository is organised into three main directories:
