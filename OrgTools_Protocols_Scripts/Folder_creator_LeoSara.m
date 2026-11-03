@@ -11,24 +11,6 @@ dataFolder = 'D:\BV_data';
 %% Group folder might be used where we have separate conditions, unused for Leo+sara
 %groupFolder = [];
 % groupFolder = strsplit(sourceFolder, "\");
-% groupFolder = groupFolder{end};
-
-%Sara's source folder
-sourceFolder = '\\ca-um-nas201\fpn_rdm$\DM0596_BS_ATTBCI_P\Iara_others\06_Datasets\SaraData_Server'
-cd(sourceFolder);
-
-%Makes list of participant names and calculates number of participants
-file_list = dir;
-participant_names = {file_list.name};
-participant_names(:, 1:2) = [];
-number_of_participants = numel(participant_names);
-
-%participants_notto_take = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 28, 29, 31];
-%     skipsubject = cur_participant_id == participants_notto_take
-% 
-%     if any(skipsubject)
-%         continue
-%     end
     
 for cur_participant_id = 1:number_of_participants
 

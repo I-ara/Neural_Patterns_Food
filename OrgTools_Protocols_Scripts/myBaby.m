@@ -1,5 +1,5 @@
 %% This is the whole script that does everything
-%
+% Author: Iara de ALmeida Ivo
 %
 
 %% Step 1 - New Dataset, who dis
