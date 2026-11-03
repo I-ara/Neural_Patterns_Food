@@ -1,0 +1,187 @@
+{
+    "bvnbformat": 1,
+    "bvnbformat_minor": 0,
+    "cells": [
+        {
+            "cell_type": "code",
+            "execution_count": 260,
+            "metadata": {
+            },
+            "outputs": [
+            ],
+            "source": [
+                "# Import the os module\n",
+                "import os\n",
+                "from os import listdir\n",
+                "from pathlib import Path"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 261,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Current working directory: D:\\BV_Data\n",
+                        "The directory for the protocols is"
+                    ]
+                }
+            ],
+            "source": [
+                "#Source file location\n",
+                "BV_data = \"D:/BV_Data\";\n",
+                "\n",
+                "#PRT folder location\n",
+                "prt_folder = \"";\n",
+                "\n",
+                "# Change the current working directory\n",
+                "os.chdir(BV_data)\n",
+                "\n",
+                "# Print the current working directory\n",
+                "print(\"Current working directory: {0}\".format(os.getcwd()))\n",
+                "\n",
+                "# Linking the PRT's in this folder\n",
+                "print(\"The directory for the protocols is\", prt_folder)"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 262,
+            "metadata": {
+            },
+            "outputs": [
+            ],
+            "source": [
+                "# List of files \n",
+                "file_list = os.listdir();\n",
+                "\n",
+                "\n",
+                "#Test on first subject\n",
+                "del file_list[0:34]\n",
+                "\n",
+                "#file_list = [file_list[0]];"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 263,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "For participant: 207\n",
+                        "                    Current run: 01\n",
+                        "saved_vtc:  True\n",
+                        "                    Current run: 02\n",
+                        "saved_vtc:  True\n",
+                        "                    Current run: 03\n",
+                        "saved_vtc:  True\n",
+                        "                    Current run: 04\n",
+                        "saved_vtc:  True"
+                    ]
+                }
+            ],
+            "source": [
+                "## Links PRT tp VTC\n",
+                "\n",
+                "#Loop through each participant name\n",
+                "for participant in file_list:\n",
+                "    \n",
+                "    print(\"For participant:\", participant)\n",
+                "    \n",
+                "    #BV folder directory per participant for analysis D:\\BV_Data\\306\\306_FirstSteps\n",
+                "    participant_base = f'{BV_data}/{participant}/{participant}_FirstSteps/';\n",
+                "    \n",
+                "    # Change the current working directory to the participant's base\n",
+                "    #os.chdir(participant_base)\n",
+                "    \n",
+                "    #Every file base/prefix\n",
+                "    file_base = f'{participant}_3T_FoodBrain_Part1L'\n",
+                "    \n",
+                "    #preprocessed prefix\n",
+                "    process = \"_SCCTBL_3DMCTS_THPGLMF3c\"\n",
+                "\n",
+                "    #Per participant gets TAL space vmr prefix/base\n",
+                "    vmr_tal = f'{participant_base}{file_base}_IIHC_aTal'\n",
+                "\n",
+                "    #Open VMR file\n",
+                "    doc_open = f'{vmr_tal}.vmr'\n",
+                "    doc_vmr = bv.open(doc_open)\n",
+                "\n",
+                "    #Loop through each run\n",
+                "    for run in range(1, 5):\n",
+                "        \n",
+                "        run_str = f\"{run:02}\"  # Format the value with leading zeros\n",
+                "        print(\"                    Current run:\", run_str) \n",
+                "        \n",
+                "        #VTC expected prefix\n",
+                "        vtc_base = f'{participant_base}{file_base}_{run_str}{process}_TAL.vtc'\n",
+                "        \n",
+                "        #PRT expected file of type S201_run1\n",
+                "        prt_file = f'{prt_folder}S{participant}_run{run}'\n",
+                "        \n",
+                "        linked_vtc = doc_vmr.link_vtc(vtc_base)\n",
+                "\n",
+                "        linked_prt = doc_vmr.link_protocol(prt_file) # only documented as a fmr function\n",
+                "        \n",
+                "        saved_vtc = doc_vmr.save_vtc(vtc_base) # have to provide file name as str with forward slash; does not take pathlib object\n",
+                "        print(\"saved_vtc: \", saved_vtc)\n",
+                "\n",
+                "        # create sdm file for VTC\n",
+                "        doc_vmr.clear_run_designmatrix()\n",
+                "\n",
+                "        # add predictors from prt file \n",
+                "        doc_vmr.create_run_designmatrix_from_protocol(0, True) #I dont know how this works, it just does\n",
+                "\n",
+                "        # manually add constant predictor and set that constant is included\n",
+                "        doc_vmr.add_predictor(\"Constant\")\n",
+                "        doc_vmr.set_predictor_values(\"Constant\", 0, 386, 1.0)\n",
+                "        doc_vmr.sdm_contains_constant_predictor = 1 # works\n",
+                "\n",
+                "        # save sdm file\n",
+                "        sdm_path = f'{participant_base}{file_base}_{run_str}{process}_TAL.sdm'\n",
+                "        doc_vmr.save_run_designmatrix(sdm_path)\n",
+                "\n",
+                "    doc_vmr.close()\n",
+                "\n",
+                "        "
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 181,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Current run: 00\n",
+                        "Current run: 01\n",
+                        "Current run: 02\n",
+                        "Current run: 03"
+                    ]
+                }
+            ],
+            "source": [
+                " #Test loop\n",
+                " #Loop through each run\n",
+                "for run in range(0, 4):\n",
+                "        \n",
+                "    run_str = f\"{run:02}\"  # Format the value with leading zeros\n",
+                "    print(\"Current run:\", run_str)    "
+            ]
+        }
+    ],
+    "log_brainvoyager_code": false,
+    "metadata": {
+    }
+}

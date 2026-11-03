@@ -1,0 +1,111 @@
+{
+    "bvnbformat": 1,
+    "bvnbformat_minor": 0,
+    "cells": [
+        {
+            "cell_type": "code",
+            "execution_count": 34,
+            "metadata": {
+            },
+            "outputs": [
+            ],
+            "source": [
+                "\"\"\"Collate VMP files from Faruk.\"\"\"\n",
+                "\n",
+                "import os\n",
+                "import bvbabel\n",
+                "import numpy as np\n",
+                "import pprint"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": -1,
+            "metadata": {
+            },
+            "outputs": [
+            ],
+            "source": [
+                "#Source file location\n",
+                "BV_data = \"";\n",
+                "\n",
+                "# Change the current working directory\n",
+                "os.chdir(BV_data)\n",
+                "\n",
+                "# Print the current working directory\n",
+                "print(\"Current working directory: {0}\".format(os.getcwd()))"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": -1,
+            "metadata": {
+            },
+            "outputs": [
+            ],
+            "source": [
+                "\n",
+                "\n",
+                "\n",
+                "SUFFIX = \"collated_bvbabel\""
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": -1,
+            "metadata": {
+            },
+            "outputs": [
+            ],
+            "source": [
+                "# =============================================================================\n",
+                "for participant in range(len(FILES)):\n",
+                "    \n",
+                "    FILES = [\n",
+                "    \"/P{participant}_hed.vmp\",\n",
+                "    \"/P{participant}_health.vmp\",\n",
+                "    \"/P{participant}_neut.vmp\",\n",
+                "    \"/P{participant}_hc.vmp\",\n",
+                "    \"/P{participant}_lc.vmp\",\n",
+                "    \"/P{participant}_pal.vmp\",\n",
+                "    \"/P{participant}_unpal.vmp\",\n",
+                "]\n",
+                "    # Load main vmr\n",
+                "    header_main, data_main = bvbabel.vmp.read_vmp(FILES[i])\n",
+                "\n",
+                "    # Add subject identifier to the map name\n",
+                "    basename = FILES[i].split(os.extsep, 1)[0]\n",
+                "    filename = basename.split(os.sep)[-1]\n",
+                "    mapname_main = header_main[\"Map\"][0][\"MapName\"]\n",
+                "    header_main[\"Map\"][0][\"MapName\"] = f\"{filename}: {mapname_main}\"\n",
+                "\n",
+                "    for j in range(len(FILES)):\n",
+                "        if j == i:\n",
+                "            pass\n",
+                "        else:\n",
+                "            # Load additional vmr\n",
+                "            header_temp, data_temp = bvbabel.vmp.read_vmp(FILES[j])\n",
+                "\n",
+                "            # Add subject identifier to the map name\n",
+                "            basename_temp = FILES[j].split(os.extsep, 1)[0]\n",
+                "            filename_temp = basename_temp.split(os.sep)[-1]\n",
+                "            mapname = header_temp[\"Map\"][0][\"MapName\"]\n",
+                "            header_temp[\"Map\"][0][\"MapName\"] = f\"{filename_temp}: {mapname}\"\n",
+                "\n",
+                "            # Append new VMP map from another subject\n",
+                "            header_main[\"NrOfSubMaps\"] += 1\n",
+                "            header_main[\"Map\"].append(header_temp[\"Map\"][0])\n",
+                "            data_main = np.concatenate([data_main, data_temp], axis=3)\n",
+                "\n",
+                "    # Write VMP\n",
+                "    outname = f\"{basename}_{SUFFIX}.vmp\"\n",
+                "    bvbabel.vmp.write_vmp(outname, header_main, data_main)\n",
+                "\n",
+                "print(\"Finished.\")"
+            ]
+        }
+    ],
+    "log_brainvoyager_code": false,
+    "metadata": {
+    }
+}

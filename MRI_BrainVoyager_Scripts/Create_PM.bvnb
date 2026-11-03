@@ -1,0 +1,97 @@
+{
+    "bvnbformat": 1,
+    "bvnbformat_minor": 0,
+    "cells": [
+        {
+            "cell_type": "code",
+            "execution_count": 180,
+            "metadata": {
+            },
+            "outputs": [
+            ],
+            "source": [
+                "# Import required packages\n",
+                "import numpy as np\n",
+                "import os\n",
+                "import copy\n",
+                "import sys\n",
+                "sys.path.append('bvbabel-main') #please adapt this path!\n",
+                "import bvbabel"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 181,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Current working directory: ",
+                        "Updated file_list participants: ['10', '104', '105', '107', '108', '109', '11', '110', '111', '112', '113', '114', '115', '116', '117', '118', '119', '12', '121', '122', '123', '124', '125', '126', '127', '128', '129', '13', '130', '131', '14', '15', '17', '18', '19', '2', '201', '202', '203', '205', '206', '207', '208', '209', '210', '211', '213', '214', '215', '217', '218', '219', '22', '220', '221', '222', '223', '224', '225', '226', '228', '229', '23', '230', '231', '233', '234', '236', '237', '238', '239', '24', '25', '26', '27', '28', '3', '302', '304', '306', '307', '309', '311', '313', '316', '318', '319', '32', '321', '323', '325', '326', '328', '330', '331', '332', '333', '334', '335', '336', '342', '343', '4', '5', '6', '7', '8', '9', 'AllcondsAnalysis']\n",
+                        "The participants in list are: ['10', '104', '105', '107', '108', '109', '11', '110', '111', '112', '113', '114', '115', '116', '117', '118', '119', '12', '121', '122', '123', '124', '125', '126', '127', '128', '129', '13', '130', '131', '14', '15', '17', '18', '19', '2', '201', '202', '203', '205', '206', '207', '208', '209', '210', '211', '213', '214', '215', '217', '218', '219', '22', '220', '221', '222', '223', '224', '225', '226', '228', '229', '23', '230', '231', '233', '234', '236', '237', '238', '239', '24', '25', '26', '27', '28', '3', '302', '304', '306', '307', '309', '311', '313', '316', '318', '319', '32', '321', '323', '325', '326', '328', '330', '331', '332', '333', '334', '335', '336', '342', '343', '4', '5', '6', '7', '8', '9']"
+                    ]
+                }
+            ],
+            "source": [
+                "#Source file location\n",
+                "BV_data = \"";\n",
+                "\n",
+                "# Change the current working directory\n",
+                "os.chdir(BV_data)\n",
+                "\n",
+                "# Print the current working directory\n",
+                "print(\"Current working directory: {0}\".format(os.getcwd()))\n",
+                "\n",
+                "# List of files \n",
+                "file_list = next(os.walk('.'))[1]\n",
+                "\n",
+                "# Linking the PRT's in this folder\n",
+                "print(\"Updated file_list participants:\", file_list)\n",
+                "\n",
+                "print(\"The participants in list are:\", file_list)"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 183,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Traceback (most recent call last):\n",
+                        "  File \"<string>\", line 11, in <module>\n",
+                        "  File \"<__array_function__ internals>\", line 180, in concatenate\n",
+                        "ValueError: all the input array dimensions for the concatenation axis must match exactly, but along dimension 2, the array at index 0 has size 60 and the array at index 1 has size 72"
+                    ]
+                }
+            ],
+            "source": [
+                "counter = 0\n",
+                "for participant in file_list:\n",
+                "    \n",
+                "    vmp_header, vmp_data = bvbabel.vmp.read_vmp(f'{BV_data}/AllcondsAnalysis/P{participant}_hed.vmp')\n",
+                "    \n",
+                "    if counter == 0:\n",
+                "        vmp_merged_data = copy.deepcopy(vmp_data)\n",
+                "        vmp_merged_data = vmp_merged_data[:,:,:, None]\n",
+                "        vmp_merged_header = copy.deepcopy(vmp_header)\n",
+                "    else:\n",
+                "        vmp_merged_data = np.concatenate((vmp_merged_data,vmp_data[:,:,:, None]),axis = 3)\n",
+                "        vmp_merged_header['Map'].extend(vmp_header['Map'])\n",
+                "    counter = counter + 1\n",
+                "\n",
+                "vmp_merged_header['NrOfSubMaps'] = len(file_list)\n",
+                "bvbabel.vmp.write_vmp('AllParticipants_hedoverneut.vmp', vmp_merged_header, vmp_merged_data)"
+            ]
+        }
+    ],
+    "log_brainvoyager_code": false,
+    "metadata": {
+    }
+}

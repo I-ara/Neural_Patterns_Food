@@ -1,0 +1,170 @@
+{
+    "bvnbformat": 1,
+    "bvnbformat_minor": 0,
+    "cells": [
+        {
+            "cell_type": "code",
+            "execution_count": 199,
+            "metadata": {
+            },
+            "outputs": [
+            ],
+            "source": [
+                "# Import the os module\n",
+                "import os\n",
+                "from os import listdir\n",
+                "from pathlib import Path"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 200,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "max_text_lines": 20,
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Current working directory: F:\\BV_Data2"
+                    ]
+                }
+            ],
+            "source": [
+                "#Source file location\n",
+                "BV_data = \"F:/BV_Data2\";\n",
+                "\n",
+                "# Change the current working directory\n",
+                "os.chdir(BV_data)\n",
+                "\n",
+                "# Print the current working directory\n",
+                "print(\"Current working directory: {0}\".format(os.getcwd()))"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 203,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "max_text_lines": 20,
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "The files are:  ['024', '025', '026', '027', '028', '029', '030', '031', '023', '001', '002', '003', '004', '005', '006', '007', '008', '009', '011', '012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022']"
+                    ]
+                }
+            ],
+            "source": [
+                "# List of files \n",
+                "file_list = os.listdir();\n",
+                "\n",
+                "#file_list = ['311'];\n",
+                "\n",
+                "print(\"The files are: \", file_list)"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 196,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "max_text_lines": 20,
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "For participant: 311\n",
+                        "                    Current run: 01\n",
+                        "                    Current run: 02\n",
+                        "                    Current run: 03\n",
+                        "                    Current run: 04"
+                    ]
+                }
+            ],
+            "source": [
+                "## Creates VTCs\n",
+                "\n",
+                "#Loop through each participant name\n",
+                "for participant in file_list :\n",
+                "    \n",
+                "    #BV folder for analysis ",
+                "    participant_base = f'{BV_data}/{participant}/{participant}_FirstFiles/';\n",
+                "    print(\"For participant:\", participant)\n",
+                "    \n",
+                "    #Get functional fmr file base\n",
+                "    fmr_base = f'{participant}_3T_FoodBrain'\n",
+                "\n",
+                "    #Per participant gets original space vmr\n",
+                "    vmr_base = f'{participant}_3T_FoodBrain_IIHC'\n",
+                "    \n",
+                "    doc_open = f'{participant_base}{vmr_base}.vmr'\n",
+                "\n",
+                "\n",
+                "    #Get additional files for vtc\n",
+                "    ia_trf   = f'{participant_base}{fmr_base}_01-TO-{vmr_base}_IA.trf'\n",
+                "    fa_trf   = f'{participant_base}{fmr_base}_01-TO-{vmr_base}_FA.trf'\n",
+                "    acpc_trf = f'{participant_base}{vmr_base}_aACPC.trf'\n",
+                "    cb_tal   = f'{participant_base}{vmr_base}_aACPC.tal'\n",
+                "\n",
+                "    #Loop through each run\n",
+                "    for run in range(1, 5):\n",
+                "        \n",
+                "        doc_vmr = bv.open(doc_open)\n",
+                "        \n",
+                "        run_str = f\"{run:02}\"  # Format the value with leading zeros\n",
+                "        print(\"                    Current run:\", run_str)    \n",
+                "        \n",
+                "        #Get functional processed fmr file of this run\n",
+                "        fmr_pp   = f'_{run_str}_SCCTBL_3DMCTS_THPGLMF3c'\n",
+                "\n",
+                "        fmr_file = f'{participant_base}{fmr_base}{fmr_pp}.fmr'\n",
+                "        out_vtc  = f'{participant_base}{fmr_base}{fmr_pp}_TAL_TEST.vtc'\n",
+                "        \n",
+                "        res      = 2\n",
+                "        interpol = 2  # 0 -> nearest nbr, 1 -> trilin, 2 -> sinc\n",
+                "    \n",
+                "        doc_vmr.create_vtc_in_mni_space(fmr_file, ia_trf, fa_trf, acpc_trf, cb_tal, out_vtc, res, interpol)\n",
+                "        doc_vmr.close()\n",
+                "        \n",
+                "        del (run_str, fmr_pp, fmr_file, out_vtc)\n",
+                "    del(participant_base, fmr_base, vmr_base, doc_open, ia_trf, fa_trf, acpc_trf, cb_tal)\n",
+                "\n",
+                "        "
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 181,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "max_text_lines": 20,
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Current run: 00\n",
+                        "Current run: 01\n",
+                        "Current run: 02\n",
+                        "Current run: 03"
+                    ]
+                }
+            ],
+            "source": [
+                " #Test loop\n",
+                " #Loop through each run\n",
+                "for run in range(0, 4):\n",
+                "        \n",
+                "    run_str = f\"{run:02}\"  # Format the value with leading zeros\n",
+                "    print(\"Current run:\", run_str)    "
+            ]
+        }
+    ],
+    "log_brainvoyager_code": false,
+    "metadata": {
+    }
+}

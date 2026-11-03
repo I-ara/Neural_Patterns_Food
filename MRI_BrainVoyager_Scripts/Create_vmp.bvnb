@@ -1,0 +1,228 @@
+{
+    "bvnbformat": 1,
+    "bvnbformat_minor": 0,
+    "cells": [
+        {
+            "cell_type": "code",
+            "execution_count": 187,
+            "metadata": {
+            },
+            "outputs": [
+            ],
+            "source": [
+                "# Import the os module\n",
+                "import os\n",
+                "from os import listdir\n",
+                "from pathlib import Path"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 188,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Current working directory: "
+                    ]
+                }
+            ],
+            "source": [
+                "#Source file location\n",
+                "BV_data = \"";\n",
+                "\n",
+                "# Change the current working directory\n",
+                "os.chdir(BV_data)\n",
+                "\n",
+                "# Print the current working directory\n",
+                "print(\"Current working directory: {0}\".format(os.getcwd()))"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 189,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Updated file_list participants: ['10', '104', '105', '107', '108', '109', '11', '110', '111', '112', '113', '114', '115', '116', '117', '118', '119', '12', '121', '122', '123', '124', '125', '126', '127', '128', '129', '13', '130', '131', '14', '15', '17', '18', '19', '2', '201', '202', '203', '205', '206', '207', '208', '209', '210', '211', '213', '214', '215', '217', '218', '219', '22', '220', '221', '222', '223', '224', '225', '226', '228', '229', '23', '230', '231', '233', '234', '236', '237', '238', '239', '24', '25', '26', '27', '28', '3', '302', '304', '306', '307', '309', '311', '313', '316', '318', '319', '32', '321', '323', '325', '326', '328', '330', '331', '332', '333', '334', '335', '336', '342', '343', '4', '5', '6', '7', '8', '9', 'AllcondsAnalysis']\n",
+                        "The participants in sara's list are: ['10', '104', '105', '107', '108', '109', '11', '110', '111', '112', '113', '114', '115', '116', '117', '118', '119', '12', '121', '122', '123', '124', '125', '126', '127', '128', '129', '13', '130', '131', '14', '15', '17', '18', '19', '2', '22', '23', '24', '25', '26', '27', '28', '3', '32', '4', '5', '6', '7', '8', '9']"
+                    ]
+                }
+            ],
+            "source": [
+                "# List of files \n",
+                "file_list = next(os.walk('.'))[1]\n",
+                "\n",
+                "# Linking the PRT's in this folder\n",
+                "print(\"Updated file_list participants:\", file_list)\n",
+                "\n"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 190,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Current participant: 10\n",
+                        "Current participant: 104\n",
+                        "Current participant: 105\n",
+                        "Current participant: 107\n",
+                        "Current participant: 108\n",
+                        "Current participant: 109\n",
+                        "Current participant: 11\n",
+                        "Current participant: 110\n",
+                        "Current participant: 111\n",
+                        "Current participant: 112\n",
+                        "Current participant: 113\n",
+                        "Current participant: 114\n",
+                        "Current participant: 115\n",
+                        "Current participant: 116\n",
+                        "Current participant: 117\n",
+                        "Current participant: 118\n",
+                        "Current participant: 119\n",
+                        "Current participant: 12\n",
+                        "Current participant: 121\n",
+                        "Current participant: 122\n",
+                        "Current participant: 123\n",
+                        "Current participant: 124\n",
+                        "Current participant: 125\n",
+                        "Current participant: 126\n",
+                        "Current participant: 127\n",
+                        "Current participant: 128\n",
+                        "Current participant: 129\n",
+                        "Current participant: 13\n",
+                        "Current participant: 130\n",
+                        "Current participant: 131\n",
+                        "Current participant: 14\n",
+                        "Current participant: 15\n",
+                        "Current participant: 17\n",
+                        "Current participant: 18\n",
+                        "Current participant: 19\n",
+                        "Current participant: 2\n",
+                        "Current participant: 22\n",
+                        "Current participant: 23\n",
+                        "Current participant: 24\n",
+                        "Current participant: 25\n",
+                        "Current participant: 26\n",
+                        "Current participant: 27\n",
+                        "Current participant: 28\n",
+                        "Current participant: 3\n",
+                        "Current participant: 32\n",
+                        "Current participant: 4\n",
+                        "Current participant: 5\n",
+                        "Current participant: 6\n",
+                        "Current participant: 7\n",
+                        "Current participant: 8\n",
+                        "Current participant: 9"
+                    ]
+                }
+            ],
+            "source": [
+                "for participant in file_list:\n",
+                "    \n",
+                "    bv.close_all() \n",
+                "    \n",
+                "    #BV folder directory per participant for analysis",
+                "    participant_base = f'{BV_data}/{participant}/{participant}_FirstSteps/';\n",
+                "    print(\"Current participant:\", participant)\n",
+                "    \n",
+                "    #Every file base/prefix\n",
+                "    file_base = f'{participant}_3T_FoodBrain'\n",
+                "    \n",
+                "    #preprocessed prefix\n",
+                "    process = \"_SCCTBL_3DMCTS_THPGLMF3c_TAL\"\n",
+                "    \n",
+                "    #Per participant gets original space vmr\n",
+                "    vmr_base = f'_IIHC_aTal'\n",
+                "    \n",
+                "    doc_open = f'{participant_base}{file_base}{vmr_base}.vmr'\n",
+                "    \n",
+                "    glm_output = f'{BV_data}/AllcondsAnalysis/participant{participant}_allruns_RFX_AR2.glm'\n",
+                "    \n",
+                "    doc = bv.open(doc_open)\n",
+                "    \n",
+                "    #Hedonic map\n",
+                "    doc.load_glm(glm_output)\n",
+                "    doc.clear_contrasts()\n",
+                "    doc.add_contrast(f'P{participant}: Hedonic')\n",
+                "    doc.set_contrast_string('1 0 0 1 0 0 1 0 0 1 0 0')\n",
+                "\n",
+                "    doc.show_glm()\n",
+                "    doc.save_maps(f'P{participant}_hed.vmp')\n",
+                "    \n",
+                "    #Health map\n",
+                "    doc.load_glm(glm_output)\n",
+                "    doc.clear_contrasts()\n",
+                "    doc.add_contrast(f'P{participant}: Health')\n",
+                "    doc.set_contrast_string('0 1 0 0 1 0 0 1 0 0 1 0')\n",
+                "\n",
+                "    doc.show_glm()\n",
+                "    doc.save_maps(f'P{participant}_health.vmp')\n",
+                "    \n",
+                "    #Neutral map\n",
+                "    doc.load_glm(glm_output)\n",
+                "    doc.clear_contrasts()\n",
+                "    doc.add_contrast(f'P{participant}: Neutral')\n",
+                "    doc.set_contrast_string('0 0 1 0 0 1 0 0 1 0 0 1')\n",
+                "\n",
+                "    doc.show_glm()\n",
+                "    doc.save_maps(f'P{participant}_neut.vmp')\n",
+                "    \n",
+                "    #High Cal map\n",
+                "    doc.load_glm(glm_output)\n",
+                "    doc.clear_contrasts()\n",
+                "    doc.add_contrast(f'P{participant}: Hc')\n",
+                "    doc.set_contrast_string('1 1 1 1 1 1 0 0 0 0 0 0')\n",
+                "\n",
+                "    doc.show_glm()\n",
+                "    doc.save_maps(f'P{participant}_hc.vmp')\n",
+                "        \n",
+                "    #Low Cal map\n",
+                "    doc.load_glm(glm_output)\n",
+                "    doc.clear_contrasts()\n",
+                "    doc.add_contrast(f'P{participant}: Lc')\n",
+                "    doc.set_contrast_string('0 0 0 0 0 0 1 1 1 1 1 1')\n",
+                "    \n",
+                "    doc.show_glm()\n",
+                "    doc.save_maps(f'P{participant}_lc.vmp')\n",
+                "    \n",
+                "\n",
+                "    #Palatable map\n",
+                "    doc.load_glm(glm_output)\n",
+                "    doc.clear_contrasts()\n",
+                "    doc.add_contrast(f'P{participant}: Pal')\n",
+                "    doc.set_contrast_string('1 1 1 0 0 0 1 1 1 0 0 0')\n",
+                "    \n",
+                "    doc.show_glm()\n",
+                "    doc.save_maps(f'P{participant}_pal.vmp')\n",
+                "    \n",
+                "    \n",
+                "    #Palatable map\n",
+                "    doc.load_glm(glm_output)\n",
+                "    doc.clear_contrasts()\n",
+                "    doc.add_contrast(f'P{participant}: Unpal')\n",
+                "    doc.set_contrast_string('0 0 0 1 1 1 0 0 0 1 1 1')\n",
+                "    \n",
+                "    doc.show_glm()\n",
+                "    doc.save_maps(f'P{participant}_unpal.vmp')\n",
+                "    \n",
+                "doc.close()"
+            ]
+        }
+    ],
+    "log_brainvoyager_code": false,
+    "metadata": {
+    }
+}

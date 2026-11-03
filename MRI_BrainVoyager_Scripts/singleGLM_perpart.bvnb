@@ -1,0 +1,100 @@
+{
+    "bvnbformat": 1,
+    "bvnbformat_minor": 0,
+    "cells": [
+        {
+            "cell_type": "code",
+            "execution_count": 110,
+            "metadata": {
+            },
+            "outputs": [
+            ],
+            "source": [
+                "# Import the os module\n",
+                "import os\n",
+                "from os import listdir\n",
+                "from pathlib import Path"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 111,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Current working directory: D:\\BV_Data"
+                    ]
+                }
+            ],
+            "source": [
+                "#Source file location\n",
+                "BV_data = \"D:/BV_Data\";\n",
+                "\n",
+                "# Change the current working directory\n",
+                "os.chdir(BV_data)\n",
+                "\n",
+                "# Print the current working directory\n",
+                "print(\"Current working directory: {0}\".format(os.getcwd()))\n",
+                "\n",
+                "# List of files \n",
+                "file_list = os.listdir();\n",
+                "\n",
+                
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 105,
+            "metadata": {
+            },
+            "outputs": [
+            ],
+            "source": [
+                "## Run GLM\n",
+                "\n",
+                "for participant in file_list:\n",
+                "    \n",
+                "    #BV folder directory per participant for analysis D:\\BV_Data\\306\\306_FirstSteps\n",
+                "    participant_base = f'{BV_data}/{participant}/{participant}_FirstSteps/';\n",
+                "    print(\"Current participant:\", participant) \n",
+                "    \n",
+                "    #Every file base/prefix\n",
+                "    file_base = f'{participant}_3T_FoodBrain'\n",
+                "    \n",
+                "    #preprocessed prefix\n",
+                "    process = \"_SCCTBL_3DMCTS_THPGLMF3c\"\n",
+                "\n",
+                "    #Loop through each run\n",
+                "    for run in range(1, 5):\n",
+                "        \n",
+                "        run_str = f\"{run:02}\"  # Format the value with leading zeros\n",
+                "        print(\"                    Current run:\", run_str) \n",
+                "        \n",
+                "        \n",
+                "        fmr_file = f'{participant_base}{file_base}_{run_str}{process}.fmr'\n",
+                "    \n",
+                "        sdm_file = f'{participant}{file_base}_{run_str}{process}_TAL.sdm'\n",
+                "\n",
+                "        doc_fmr = bv.open(fmr_file)\n",
+                "    \n",
+                "        doc_fmr.serial_correlation_correction_level = 2  # 1 -> AR(1), 2 -> AR(2)\n",
+                "        doc_fmr.psc_transform_studies = True\n",
+                "\n",
+                "        doc_fmr.clear_run_designmatrix()\n",
+                "        doc_fmr.create_run_designmatrix_from_protocol(0, True)\n",
+                "        doc_fmr.compute_run_glm()\n",
+                "        doc_fmr.show_glm()\n",
+                "\n",
+                "\n",
+                "    "
+            ]
+        }
+    ],
+    "log_brainvoyager_code": false,
+    "metadata": {
+    }
+}

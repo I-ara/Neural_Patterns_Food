@@ -1,0 +1,169 @@
+{
+    "bvnbformat": 1,
+    "bvnbformat_minor": 0,
+    "cells": [
+        {
+            "cell_type": "code",
+            "execution_count": 55,
+            "metadata": {
+            },
+            "outputs": [
+            ],
+            "source": [
+                "import sys\n",
+                "import os\n",
+                "from glob import glob\n",
+                "import shutil\n",
+                "import math\n",
+                "import datetime\n",
+                "from pathlib import Path"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 56,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Current working directory: D:\\BV_Data"
+                    ]
+                }
+            ],
+            "source": [
+                "#Source file location\n",
+                "og_location = \"D:/BV_Data\";\n",
+                "\n",
+                "# Change the current working directory\n",
+                "os.chdir(og_location)\n",
+                "\n",
+                "# Print the current working directory\n",
+                "print(\"Current working directory: {0}\".format(os.getcwd()))"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 57,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "The participants in this list are: ['10', '101', '102', '104', '105', '106', '107', '108', '109', '11', '110', '111', '112', '113', '114', '115', '116', '117', '118', '119', '12', '121', '122', '123', '124', '125', '126', '127', '128', '129', '13', '130', '131', '14', '15', '16', '17', '18', '19', '2', '20', '22', '23', '24', '25', '26', '27', '28', '29', '3', '30', '31', '32', '4', '5', '6', '7', '8', '9']"
+                    ]
+                }
+            ],
+            "source": [
+                "# List of folders with participant names \n",
+                "file_list = os.listdir();\n",
+                "\n",
+                "# For this purpose we want only sara's files (1:131)\n",
+                "#saras = [int(x) for x in file_list]\n",
+                "#saras = [i for i in saras if i<=140]\n",
+                "\n",
+                "#sara_filelist = [str(y) for y in saras]\n",
+                "\n",
+                "print(\"The participants in this list are:\", file_list)"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 58,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "The participants in this list are: ['101', '106']"
+                    ]
+                }
+            ],
+            "source": [
+                "file_list = ['101', '106']\n",
+                "\n",
+                "print(\"The participants in this list are:\", file_list)"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": 59,
+            "metadata": {
+            },
+            "outputs": [
+                {
+                    "name": "stdout",
+                    "output_type": "stream",
+                    "text": [
+                        "Current participant: 101\n",
+                        "      Creating VMR...\n",
+                        "      IIHC and brain extration...\n",
+                        "      normalize to TAL...\n",
+                        "Current participant: 106\n",
+                        "      Creating VMR...\n",
+                        "      IIHC and brain extration...\n",
+                        "      normalize to TAL..."
+                    ]
+                }
+            ],
+            "source": [
+                "#Loop through each participant  \n",
+                "for participant in file_list:\n",
+                "    \n",
+                "    print(\"Current participant:\", participant)\n",
+                "\n",
+                "    #Raw Functional Data folder ",
+                "    raw_anat_folder = f'{og_location}/{participant}/{participant}_DCMs/Anatomy/';\n",
+                "\n",
+                "    #BV folder for analysis ",
+                "    BV_folder = f'{og_location}/{participant}/{participant}_FirstSteps/';   \n",
+                "    \n",
+                "    os.chdir(raw_anat_folder)\n",
+                "\n",
+                "    #List all the volumes in this run\n",
+                "    volume_list = os.listdir();\n",
+                "        \n",
+                "    #First vol name\n",
+                "    first_vol_name = volume_list[0];\n",
+                "        \n",
+                "    #Number of volumes in this folder\n",
+                "    total_vols = len(volume_list);\n",
+                "        \n",
+                "    #Prefix name ,
+                "    vmr_prefix = f'{participant}_3T_FoodBrain';\n",
+                "    \n",
+                "    #Final location+name\n",
+                "    vmr_name = f'{BV_folder}{vmr_prefix}';\n",
+                "    \n",
+                "    # Create VMR\n",
+                "    print(\"      Creating VMR...\")\n",
+                "    # use CreateProjectVMR to create V16 file for later brain segmentation; command is removed in 21.4\n",
+                "    # CreateDocumentVMR('filetye', 1st file, NR of Slices, Byte order is little endian, size of image along x axis, size of image along y axis, bytes per pixel (standard=2))\n",
+                "    docVMR = brainvoyager.create_vmr(\"DICOM\", first_vol_name, total_vols, False, 256, 256, 2)\n",
+                "    docVMR.save_as(vmr_name)\n",
+                "        \n",
+                "    # print(docVMR.methods())\n",
+                "    # IIHC is not executed because v16 file does not have ISO in name\n",
+                "    # remove the save as if iso was done above and leave the name to the same name without iso in it\n",
+                "    print(\"      IIHC and brain extration...\")\n",
+                "    docVMR.correct_intensity_inhomogeneities() # command is run in place, current document is updated immediately\n",
+                "    \n",
+                "    print(\"      normalize to TAL...\")\n",
+                "    docVMR.auto_acpc_tal_transformation() # saves new file automatically\n",
+                "    docVMR.close()\n",
+                "    \n",
+                "# Change the current working directory again to BV_data\n",
+                "os.chdir(og_location)                 "
+            ]
+        }
+    ],
+    "log_brainvoyager_code": false,
+    "metadata": {
+    }
+}
